@@ -73,41 +73,7 @@ public class ElasticSearchMovieManager implements MovieManager {
 	public List<Movie> searchMovies(String searchString, String field) {
 		List<Movie> result = new ArrayList<Movie>();
 
-		if ("".equals(searchString)) {
-			searchString = "*";
-		}
-
-		Log.i(TAG, "Searching for " + searchString);
-
-		HttpClient httpClient = new DefaultHttpClient();
-
-		try {
-			HttpPost searchRequest = createSearchRequest(searchString, field);
-
-			HttpResponse response = httpClient.execute(searchRequest);
-
-			String status = response.getStatusLine().toString();
-			Log.i(TAG, status);
-
-			SearchResultElasticSearchResponse<Movie> esResponse = parseResponse(response);
-			Hits<Movie> hits = esResponse.getHits();
-
-			if (hits != null) {
-				if (hits.getHits() != null) {
-					for (SimpleElasticSearchResponse<Movie> sesr : hits
-							.getHits()) {
-						result.add(sesr.getSource());
-					}
-				}
-			}
-
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		// TODO: Implement search movies using ElasticSearch
 
 		return result;
 	}

@@ -89,9 +89,7 @@ public class MainActivity extends Activity {
 		super.onResume();
 
 		// Refresh the list when visible
-		movies.clear();
-		Thread thread = new SearchThread("");
-		thread.start();
+		// TODO: Search all
 	}
 
 	/** 
@@ -101,14 +99,9 @@ public class MainActivity extends Activity {
 	public void search(View view) {
 		movies.clear();
 
-		// Extract search query from text view
-		EditText searchText = (EditText) findViewById(R.id.editText1);
-		final String searchString = searchText.getText().toString();
-		searchText.setText("");
+		// TODO: Extract search query from text view
 
-		// Run the search thread
-		Thread thread = new SearchThread(searchString);
-		thread.start();
+		// TODO: Run the search thread
 	}
 	
 	/**
@@ -133,19 +126,7 @@ public class MainActivity extends Activity {
 
 
 	class SearchThread extends Thread {
-		private String search;
-
-		public SearchThread(String search) {
-			this.search = search;
-		}
-
-		@Override
-		public void run() {
-			movies.clear();
-			movies.addAll(movieManager.searchMovies(search, null));
-
-			runOnUiThread(doUpdateGUIList);
-		}
+		// TODO: Implement search thread
 	}
 
 	
