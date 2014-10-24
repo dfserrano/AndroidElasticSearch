@@ -3,7 +3,6 @@ package ca.ualberta.ssrg.androidelasticsearch;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.widget.TextView;
 import ca.ualberta.ssrg.androidelasticsearch.data.ElasticSearchMovieManager;
 import ca.ualberta.ssrg.androidelasticsearch.data.Movie;
@@ -15,8 +14,6 @@ public class DetailsActivity extends Activity {
 	private MovieManager movieManager;
 	private Movie movie;
 	
-	private Handler handler = new Handler();
-
 	private Runnable doUpdateGUIDetails = new Runnable() {
 		public void run() {
 			TextView title = (TextView) findViewById(R.id.detailsTitle);
@@ -67,7 +64,7 @@ public class DetailsActivity extends Activity {
 		public void run() {
 			movie = movieManager.getMovie(id);
 
-			handler.post(doUpdateGUIDetails);
+			runOnUiThread(doUpdateGUIDetails);
 		}
 	}
 

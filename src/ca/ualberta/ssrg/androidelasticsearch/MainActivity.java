@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -27,7 +26,6 @@ public class MainActivity extends Activity {
 	private ArrayAdapter<Movie> moviesViewAdapter;
 
 	private MovieManager movieManager;
-	private Handler handler = new Handler();
 
 	private Context mContext = this;
 
@@ -146,7 +144,7 @@ public class MainActivity extends Activity {
 			movies.clear();
 			movies.addAll(movieManager.searchMovies(search, null));
 
-			handler.post(doUpdateGUIList);
+			runOnUiThread(doUpdateGUIList);
 		}
 	}
 
@@ -172,7 +170,7 @@ public class MainActivity extends Activity {
 				}
 			}
 
-			handler.post(doUpdateGUIList);
+			runOnUiThread(doUpdateGUIList);
 		}
 	}
 }

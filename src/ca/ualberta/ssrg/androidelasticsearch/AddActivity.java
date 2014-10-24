@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 import ca.ualberta.ssrg.androidelasticsearch.data.ElasticSearchMovieManager;
@@ -15,7 +14,6 @@ import ca.ualberta.ssrg.androidelasticsearch.data.MovieManager;
 public class AddActivity extends Activity {
 
 	private MovieManager movieManager;
-	private Handler handler = new Handler();
 
 	// Thread that close the activity after finishing add
 	private Runnable doFinishAdd = new Runnable() {
@@ -74,7 +72,7 @@ public class AddActivity extends Activity {
 				e.printStackTrace();
 			}
 			
-			handler.post(doFinishAdd);
+			runOnUiThread(doFinishAdd);
 		}
 	}
 }
