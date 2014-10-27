@@ -1,4 +1,4 @@
-package ca.ualberta.ssrg.androidelasticsearch;
+package ca.ualberta.ssrg.movies;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,13 +7,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import ca.ualberta.ssrg.androidelasticsearch.data.ElasticSearchMovieManager;
-import ca.ualberta.ssrg.androidelasticsearch.data.Movie;
-import ca.ualberta.ssrg.androidelasticsearch.data.MovieManager;
+import ca.ualberta.ssrg.androidelasticsearch.R;
+import ca.ualberta.ssrg.movies.es.ESMovieManager;
+import ca.ualberta.ssrg.movies.es.Movie;
+import ca.ualberta.ssrg.movies.es.IMovieManager;
 
 public class AddActivity extends Activity {
 
-	private MovieManager movieManager;
+	private IMovieManager movieManager;
 
 	// Thread that close the activity after finishing add
 	private Runnable doFinishAdd = new Runnable() {
@@ -27,7 +28,7 @@ public class AddActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add);
 		
-		movieManager = new ElasticSearchMovieManager();
+		movieManager = new ESMovieManager();
 	}
 
 	public void save(View view) {

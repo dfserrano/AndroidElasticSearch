@@ -1,4 +1,4 @@
-package ca.ualberta.ssrg.androidelasticsearch.data;
+package ca.ualberta.ssrg.movies.es;
 
 import java.util.Collection;
 

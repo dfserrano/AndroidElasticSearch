@@ -1,15 +1,14 @@
-package ca.ualberta.ssrg.androidelasticsearch.data;
+package ca.ualberta.ssrg.movies.es.data;
 
-import java.util.List;
 
-public class SearchResultElasticSearchResponse<T> {
+public class SearchResponse<T> {
 
 	private int took;
 	private boolean timed_out;
 	private Shard _shards;
 	private Hits<T> hits;
 	
-	public SearchResultElasticSearchResponse() {}
+	public SearchResponse() {}
 
 	public int getTook() {
 		return took;
@@ -44,43 +43,6 @@ public class SearchResultElasticSearchResponse<T> {
 	}	   
 }
 
-class Hits<T> {
-	private int total;
-	private float max_score;
-	private List<SimpleElasticSearchResponse<T>> hits;
-	
-	public Hits() {}
-
-	public int getTotal() {
-		return total;
-	}
-
-	public void setTotal(int total) {
-		this.total = total;
-	}
-
-	public float getMax_score() {
-		return max_score;
-	}
-
-	public void setMax_score(float max_score) {
-		this.max_score = max_score;
-	}
-
-	public List<SimpleElasticSearchResponse<T>> getHits() {
-		return hits;
-	}
-
-	public void setHits(List<SimpleElasticSearchResponse<T>> hits) {
-		this.hits = hits;
-	}
-
-	@Override
-	public String toString() {
-		return "Hits [total=" + total + ", max_score=" + max_score + ", hits="
-				+ hits + "]";
-	}
-}
 	
 
 class Shard {

@@ -1,6 +1,6 @@
-package ca.ualberta.ssrg.androidelasticsearch.data;
+package ca.ualberta.ssrg.movies.es.data;
 
-public class SimpleElasticSearchResponse<T> {
+public class SearchHit<T> {
 	private String _index;
 	private String _type;
 	private String _id;
@@ -8,7 +8,7 @@ public class SimpleElasticSearchResponse<T> {
 	private boolean found;
 	private T _source;
 
-	public SimpleElasticSearchResponse() {
+	public SearchHit() {
 
 	}
 

@@ -1,9 +1,9 @@
-package ca.ualberta.ssrg.androidelasticsearch.data;
+package ca.ualberta.ssrg.movies.es;
 
 import java.util.List;
 
 
-public interface MovieManager {
+public interface IMovieManager {
 
 	public List<Movie> searchMovies(String searchString, String field);
 	public Movie getMovie(int id);

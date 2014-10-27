@@ -1,4 +1,4 @@
-package ca.ualberta.ssrg.androidelasticsearch.command;
+package ca.ualberta.ssrg.movies.es.data;
 
 public class SimpleSearchCommand {
 

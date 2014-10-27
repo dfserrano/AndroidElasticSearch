@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="ca.ualberta.ssrg.androidelasticsearch.MainActivity"
+            android:name="ca.ualberta.ssrg.movies.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,11 +25,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="ca.ualberta.ssrg.androidelasticsearch.DetailsActivity"
+            android:name="ca.ualberta.ssrg.movies.DetailsActivity"
             android:label="@string/title_activity_details" >
         </activity>
         <activity
-            android:name="ca.ualberta.ssrg.androidelasticsearch.AddActivity"
+            android:name="ca.ualberta.ssrg.movies.AddActivity"
             android:label="@string/title_activity_add" >
         </activity>
     </application>
