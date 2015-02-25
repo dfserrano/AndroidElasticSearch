@@ -1,16 +1,13 @@
 package ca.ualberta.ssrg.movies.es;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -23,167 +20,129 @@ import ca.ualberta.ssrg.movies.es.data.SearchResponse;
 import ca.ualberta.ssrg.movies.es.data.SimpleSearchCommand;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
-public class ESMovieManager implements IMovieManager {
+public class ESMovieManager {
 
-	private static final String SEARCH_URL = "http://cmput301.softwareprocess.es:8080/testing/movie/_search";
-	private static final String RESOURCE_URL = "http://cmput301.softwareprocess.es:8080/testing/movie/";
 	private static final String TAG = "MovieSearch";
-
 	private Gson gson;
+	private Movies movies = new Movies();
 
-	public ESMovieManager() {
+	public Movies getMovies() {
+		return movies;
+	}
+
+	public ESMovieManager(String search) {
 		gson = new Gson();
+		searchMovies(search, null);
 	}
 
 	/**
 	 * Get a movie with the specified id
 	 */
 	public Movie getMovie(int id) {
-
+		SearchHit<Movie> sr = null;
 		HttpClient httpClient = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(RESOURCE_URL + id);
+		HttpGet httpGet = new HttpGet(movies.getResourceUrl() + id);
 
-		HttpResponse response;
+		HttpResponse response = null;
 
 		try {
 			response = httpClient.execute(httpGet);
-			SearchHit<Movie> sr = parseMovieHit(response);
-			return sr.getSource();
+		} catch (ClientProtocolException e1) {
+			throw new RuntimeException(e1);
+		} catch (IOException e1) {
+			throw new RuntimeException(e1);
+		}
+		
+		Type searchHitType = new TypeToken<SearchHit<Movie>>() {}.getType();
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
+		try {
+			sr = gson.fromJson(
+					new InputStreamReader(response.getEntity().getContent()),
+					searchHitType);
+		} catch (JsonIOException e) {
+			throw new RuntimeException(e);
+		} catch (JsonSyntaxException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalStateException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
-		return null;
+		return sr.getSource();
+
 	}
-
-	
 
 	/**
 	 * Get movies with the specified search string. If the search does not
 	 * specify fields, it searches on all the fields.
 	 */
-	public List<Movie> searchMovies(String searchString, String field) {
-		List<Movie> result = new ArrayList<Movie>();
+	public void searchMovies(String searchString, String field) {
+		Movies result = new Movies();
 
-		// TODO: Implement search movies using ElasticSearch
-		
-		return result;
-	}
+		/**
+		 * Creates a search request from a search string and a field
+		 */
 
-	/**
-	 * Adds a new movie
-	 */
-	public void addMovie(Movie movie) {
-		HttpClient httpClient = new DefaultHttpClient();
-
-		try {
-			HttpPost addRequest = new HttpPost(RESOURCE_URL + movie.getId());
-
-			StringEntity stringEntity = new StringEntity(gson.toJson(movie));
-			addRequest.setEntity(stringEntity);
-			addRequest.setHeader("Accept", "application/json");
-
-			HttpResponse response = httpClient.execute(addRequest);
-			String status = response.getStatusLine().toString();
-			Log.i(TAG, status);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Deletes the movie with the specified id
-	 */
-	public void deleteMovie(int movieId) {
-		HttpClient httpClient = new DefaultHttpClient();
-
-		try {
-			HttpDelete deleteRequest = new HttpDelete(RESOURCE_URL + movieId);
-			deleteRequest.setHeader("Accept", "application/json");
-
-			HttpResponse response = httpClient.execute(deleteRequest);
-			String status = response.getStatusLine().toString();
-			Log.i(TAG, status);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Creates a search request from a search string and a field
-	 */
-	private HttpPost createSearchRequest(String searchString, String field)	throws UnsupportedEncodingException {
-		
-		HttpPost searchRequest = new HttpPost(SEARCH_URL);
+		HttpPost searchRequest = new HttpPost(movies.getSearchUrl());
 
 		String[] fields = null;
 		if (field != null) {
-			fields = new String[1];
-			fields[0] = field;
+			throw new UnsupportedOperationException("Not implemented!");
 		}
-		
-		SimpleSearchCommand command = new SimpleSearchCommand(searchString,	fields);
-		
-		String query = command.getJsonCommand();
+
+		SimpleSearchCommand command = new SimpleSearchCommand(searchString);
+
+		String query = gson.toJson(command);
 		Log.i(TAG, "Json command: " + query);
 
-		StringEntity stringEntity;
-		stringEntity = new StringEntity(query);
+		StringEntity stringEntity = null;
+		try {
+			stringEntity = new StringEntity(query);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
 
 		searchRequest.setHeader("Accept", "application/json");
 		searchRequest.setEntity(stringEntity);
-
-		return searchRequest;
-	}
-	
-	private SearchHit<Movie> parseMovieHit(HttpResponse response) {
 		
+		HttpClient httpClient = new DefaultHttpClient();
+		
+		HttpResponse response = null;
 		try {
-			String json = getEntityContent(response);
-			Type searchHitType = new TypeToken<SearchHit<Movie>>() {}.getType();
-			
-			SearchHit<Movie> sr = gson.fromJson(json, searchHitType);
-			return sr;
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
+			response = httpClient.execute(searchRequest);
+		} catch (ClientProtocolException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 		
-		return null;
-	}
-
-	/**
-	 * Parses the response of a search
-	 */
-	private SearchResponse<Movie> parseSearchResponse(HttpResponse response) throws IOException {
-		String json;
-		json = getEntityContent(response);
-
+		/**
+		 * Parses the response of a search
+		 */
 		Type searchResponseType = new TypeToken<SearchResponse<Movie>>() {
 		}.getType();
 		
-		SearchResponse<Movie> esResponse = gson.fromJson(json, searchResponseType);
-
-		return esResponse;
-	}
-
-	/**
-	 * Gets content from an HTTP response
-	 */
-	public String getEntityContent(HttpResponse response) throws IOException {
-		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-		StringBuffer result = new StringBuffer();
-		String line = "";
-		while ((line = rd.readLine()) != null) {
-			result.append(line);
+		try {
+			SearchResponse<Movie> esResponse = gson.fromJson(
+					new InputStreamReader(response.getEntity().getContent()),
+					searchResponseType);
+		} catch (JsonIOException e) {
+			throw new RuntimeException(e);
+		} catch (JsonSyntaxException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalStateException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
+		
+		// Extract the movies from the esResponse and put them in result
 
-		return result.toString();
+		movies.notifyObservers();
 	}
 }

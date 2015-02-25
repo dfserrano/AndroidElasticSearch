@@ -7,12 +7,11 @@ import android.widget.TextView;
 import ca.ualberta.ssrg.androidelasticsearch.R;
 import ca.ualberta.ssrg.movies.es.ESMovieManager;
 import ca.ualberta.ssrg.movies.es.Movie;
-import ca.ualberta.ssrg.movies.es.IMovieManager;
 
 public class DetailsActivity extends Activity {
 	public static String MOVIE_ID = "MOVIE_ID";
 
-	private IMovieManager movieManager;
+	private ESMovieManager movieManager;
 	private Movie movie;
 	
 	private Runnable doUpdateGUIDetails = new Runnable() {
@@ -39,7 +38,7 @@ public class DetailsActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 		
-		movieManager = new ESMovieManager();
+		movieManager = new ESMovieManager("");
 		Intent intent = getIntent();
 
 		if (intent != null) {

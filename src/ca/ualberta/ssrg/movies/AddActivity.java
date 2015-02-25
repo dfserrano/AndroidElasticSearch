@@ -8,13 +8,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import ca.ualberta.ssrg.androidelasticsearch.R;
-import ca.ualberta.ssrg.movies.es.ESMovieManager;
 import ca.ualberta.ssrg.movies.es.Movie;
-import ca.ualberta.ssrg.movies.es.IMovieManager;
+import ca.ualberta.ssrg.movies.es.Movies;
+import ca.ualberta.ssrg.movies.es.MoviesController;
 
 public class AddActivity extends Activity {
 
-	private IMovieManager movieManager;
 
 	// Thread that close the activity after finishing add
 	private Runnable doFinishAdd = new Runnable() {
@@ -22,13 +21,16 @@ public class AddActivity extends Activity {
 			finish();
 		}
 	};
+
+	private MoviesController moviesController;
+	private Movies movies;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add);
-		
-		movieManager = new ESMovieManager();
+		movies = new Movies();
+		moviesController = new MoviesController(movies);
 	}
 
 	public void save(View view) {
@@ -64,7 +66,7 @@ public class AddActivity extends Activity {
 
 		@Override
 		public void run() {
-			movieManager.addMovie(movie);
+			moviesController.addMovie(movie);
 			
 			// Give some time to get updated info
 			try {
