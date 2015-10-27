@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import ca.ualberta.ssrg.androidelasticsearch.R;
-import ca.ualberta.ssrg.movies.es.ESMovieManager;
-import ca.ualberta.ssrg.movies.es.Movie;
 
 public class DetailsActivity extends Activity {
 	public static String MOVIE_ID = "MOVIE_ID";

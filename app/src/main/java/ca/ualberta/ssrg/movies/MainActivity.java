@@ -12,10 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import ca.ualberta.ssrg.androidelasticsearch.R;
-import ca.ualberta.ssrg.movies.es.ESMovieManager;
-import ca.ualberta.ssrg.movies.es.Movie;
-import ca.ualberta.ssrg.movies.es.Movies;
-import ca.ualberta.ssrg.movies.es.MoviesController;
 
 public class MainActivity extends Activity {
 
@@ -76,10 +72,11 @@ public class MainActivity extends Activity {
 		super.onResume();
 		
 		
+		SearchThread thread = new SearchThread("");
 
-		// Refresh the list when visible
-		// TODO: Search all
-		
+		thread.start();
+
+
 	}
 	
 	/** 
@@ -131,7 +128,18 @@ public class MainActivity extends Activity {
 
 
 	class SearchThread extends Thread {
-		// TODO: Implement search thread
+		private String search;
+
+		public SearchThread(String search) {
+			this.search = search;
+		}
+
+		@Override
+		public void run() {
+			movies.clear();
+			movies.addAll(movieManager.searchMovies(search, null));
+			notifyUpdated();
+		}
 		
 	}
 

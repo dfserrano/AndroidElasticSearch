@@ -8,9 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import ca.ualberta.ssrg.androidelasticsearch.R;
-import ca.ualberta.ssrg.movies.es.Movie;
-import ca.ualberta.ssrg.movies.es.Movies;
-import ca.ualberta.ssrg.movies.es.MoviesController;
 
 public class AddActivity extends Activity {
 
