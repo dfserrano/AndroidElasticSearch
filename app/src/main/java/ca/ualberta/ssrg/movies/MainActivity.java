@@ -72,7 +72,7 @@ public class MainActivity extends Activity {
 		super.onResume();
 		
 		
-		SearchThread thread = new SearchThread("");
+		SearchThread thread = new SearchThread("*");
 
 		thread.start();
 
