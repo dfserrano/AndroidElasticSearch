@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/cshome/joshua2/AndroidElasticSearch/app/src/main/assets"/></dataSet><dataSet config="debug"><source path="/cshome/joshua2/AndroidElasticSearch/app/src/debug/assets"/></dataSet></merger>

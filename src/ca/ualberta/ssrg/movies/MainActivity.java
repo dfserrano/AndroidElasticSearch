@@ -1,8 +1,5 @@
 package ca.ualberta.ssrg.movies;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,30 +9,23 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import ca.ualberta.ssrg.androidelasticsearch.R;
 import ca.ualberta.ssrg.movies.es.ESMovieManager;
-import ca.ualberta.ssrg.movies.es.IMovieManager;
 import ca.ualberta.ssrg.movies.es.Movie;
+import ca.ualberta.ssrg.movies.es.Movies;
+import ca.ualberta.ssrg.movies.es.MoviesController;
 
 public class MainActivity extends Activity {
 
 	private ListView movieList;
-	private List<Movie> movies;
+	private Movies movies;
 	private ArrayAdapter<Movie> moviesViewAdapter;
-
-	private IMovieManager movieManager;
+	private ESMovieManager movieManager;
+	private MoviesController moviesController;
 
 	private Context mContext = this;
-
-	// Thread to update adapter after an operation
-	private Runnable doUpdateGUIList = new Runnable() {
-		public void run() {
-			moviesViewAdapter.notifyDataSetChanged();
-		}
-	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +39,10 @@ public class MainActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 
-		movies = new ArrayList<Movie>();
+		movies = new Movies();
 		moviesViewAdapter = new ArrayAdapter<Movie>(this, R.layout.list_item,movies);
 		movieList.setAdapter(moviesViewAdapter);
-		movieManager = new ESMovieManager();
+		movieManager = new ESMovieManager("");
 
 		// Show details when click on a movie
 		movieList.setOnItemClickListener(new OnItemClickListener() {
@@ -84,10 +74,26 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		
 
 		// Refresh the list when visible
 		// TODO: Search all
 		
+	}
+	
+	/** 
+	 * Called when the model changes
+	 */
+	public void notifyUpdated() {
+		// Thread to update adapter after an operation
+		Runnable doUpdateGUIList = new Runnable() {
+			public void run() {
+				moviesViewAdapter.notifyDataSetChanged();
+			}
+		};
+		
+		runOnUiThread(doUpdateGUIList);
 	}
 
 	/** 
@@ -139,7 +145,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void run() {
-			movieManager.deleteMovie(movieId);
+			moviesController.deleteMovie(movieId);
 
 			// Remove movie from local list
 			for (int i = 0; i < movies.size(); i++) {
@@ -150,8 +156,6 @@ public class MainActivity extends Activity {
 					break;
 				}
 			}
-
-			runOnUiThread(doUpdateGUIList);
 		}
 	}
 }
